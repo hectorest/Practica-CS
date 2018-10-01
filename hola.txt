@@ -1,1 +1,7 @@
+<<<<<<< HEAD
 yeeeeepaaaaaa que pasa hente
+=======
+yeeeee
+
+Fusté, que te calleh
+>>>>>>> 5afea794f8b3a734c19f3edf32ec35bb7102727c
