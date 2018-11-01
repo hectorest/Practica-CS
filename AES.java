@@ -1,15 +1,30 @@
 import javax.crypto.*;
-import javax.crypto.spec.*;
-
-/**
- * 
- * @author Alex
- * Implementacion del algoritmo AES
- *
- */
 
 public class AES {
 
+	// VARIABLES DE INSTANCIA
+	
+	private SecretKeySpec sKeySpec;
+	private Cipher cipher;
+	
+	// METODO CONSTRUCTOR
+	
+	public AES() {
+		
+		// Instanciamos un Generador de llaves en tipo AES
+		kgen = KeyGenerator.getInstance("AES");
+		// Inicializamos el generador especificandole un tamanyo de 128 bytes
+		kgen.init(128);
+		// Generamos un objeto de cifrado de tipo AES
+		cipher = Cipher.getInstance("AES");
+		// Instanciamos una llave secreta
+		SecretKey llave = kgen.generateKey();
+		// Codificamos dicha llave en bytes
+		byte[] crudo = llave.getEncoded();
+		// Construimos una clave secreta especificando que es de tipo AES
+		sKeySpec = new SecretKeySpec(crudo, "AES");//Es necesario? Se podría especificar antes
+	}
+	
 	/**
 	 * Emplearemos una funcion que convierte un array de bytes en una cadena
 	 * dicha funcion la utilizaremos para desplegar el contenido de lo
@@ -29,38 +44,41 @@ public class AES {
 		}
 		return strbuf.toString();
 	}
+
+	/**
+	 * Encriptamos el archivo pasado por parametro
+	 * 
+	 * @param archivo
+	 * @throws Exception
+	 * @return mensaje encriptado en String
+	 */
 	
-	public static void main(String[] args) throws Exception {
+	public String encriptarArchivo (String s) {
 		
-		// Instanciamos un Generador de llaves en tipo AES
-		KeyGenerator kgen = KeyGenerator.getInstance("AES");
-		// Inicializamos el generador especificandole un tamanyo de 128 bytes
-		kgen.init(128);
-		// Instanciamos una llave secreta
-		SecretKey llave = kgen.generateKey();
-		// Codificamos dicha llave en bytes
-		byte[] crudo = llave.getEncoded();
-		// Construimos una clave secreta especificando que es de tipo AES
-		SecretKeySpec skeySpec = new SecretKeySpec(crudo, "AES");
-		// Generamos un objeto de cifrado de tipo AES
-		Cipher cipher = Cipher.getInstance("AES");
-		// Asignamos el mensaje original
-		String mensajeOriginal = "Yo creía que de la seguridad se encargaban los informáticos no los multimedias, nuestro trabajo son los usuarios";
-		System.out.println("Este es el mensaje: " + mensajeOriginal);
-		// Inicializamos el sistema de ahora en modo de ENCRIPTACION
-		// con la misma clave construida anteriormente
-		cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+		// Inicializamos el sistema de ahora en modo de ENCRIPTACION con la clave del constructor
+		cipher.init(Cipher.ENCRYPT_MODE, sKeySpec);
 		// Encriptamos el mensaje
-		byte[] encriptado = cipher.doFinal(mensajeOriginal.getBytes());
-		// Imprimimos el mensaje encriptado con asHex()
-		System.out.println("Mensaje Encriptado: " + asHex(encriptado));
-		// Inicializamos ahora el sistema de ahora pero en modo de DECRIPTACION
-		// con la misma clave anteriormente construida
-		cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+		byte[] encriptado = cipher.doFinal(s.getBytes());
+		
+		return asHex(encriptado);
+	}
+	
+	/**
+	 * Desencriptamos el archivo pasado por parametro
+	 * 
+	 * @param archivo
+	 * @throws Exception
+	 * @return mensaje en claro en String
+	 */
+	
+	public String decriptarArchivo(byte[] c) {
+		
+		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
+		cipher.init(Cipher.DECRYPT_MODE, sKeySpec);
 		// Obtenemos el array de bytes de lo decriptado
-		byte[] decriptado = cipher.doFinal(encriptado);
-		// Imprimos el mensaje ya decriptado
-		System.out.println("Mensaje Desencriptado: " + new String (decriptado));
+		byte[] desencriptado = cipher.doFinal(c);
+		
+		return asHex(desencriptado);
 	}
 
 }
