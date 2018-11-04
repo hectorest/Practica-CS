@@ -22,7 +22,7 @@ public class AES {
 		// Codificamos dicha llave en bytes
 		byte[] crudo = llave.getEncoded();
 		// Construimos una clave secreta especificando que es de tipo AES
-		sKeySpec = new SecretKeySpec(crudo, "AES");//Es necesario? Se podría especificar antes
+		sKeySpec = new SecretKeySpec(crudo, "AES");//Es necesario? Se podria especificar antes
 	}
 	
 	/**
