@@ -70,7 +70,6 @@ public class RSA {
 	
 	public String guardaClave(String fichero) {
 		FileWriter salida = null;
-		String ficheroClave = null;
 		
 		try {
 			
@@ -86,17 +85,14 @@ public class RSA {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(salida != null) {
-					salida.close();
-					ficheroClave = fichero;
-				}
+				if(salida != null) salida.close();
 			} catch(IOException e) {
 				System.err.println("Excepcion: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		
-		return ficheroClave;
+		return fichero;
 	}
 	
 	
