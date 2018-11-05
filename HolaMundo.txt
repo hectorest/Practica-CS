@@ -1,7 +1,0 @@
-holaMundo
-<<<<<<< HEAD
-
-suiagdhnasiñfdguhawpidsjfasgf
-=======
-ye que pacha
->>>>>>> ee207385683a8962c870270690f6f00880946287
