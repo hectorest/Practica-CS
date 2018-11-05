@@ -68,16 +68,20 @@ public class RSA {
 	 * @return Un void
 	 */
 	
-	public String guardaClave(String fichero) {
+	public void guardaClave() {
+		//ruta donde vamos a crear el .txt !!Cambiar por vuestra ruta del proyecto!! 
+		String ruta = "C:/Users/neora/workspace/Encriptador/clave.txt";
+        File archivo = new File(ruta);
 		FileWriter salida = null;
 		
 		try {
 			
 			// abrimos el fichero donde guardamos la clave privada
-			salida = new FileWriter(fichero);
+			salida = new FileWriter(archivo);
 			String clave = this.getPrivateKey();
 			
 			// lo guardamos
+			
 			salida.write(clave);
 			
 		} catch(NullPointerException | IOException e) {
@@ -91,8 +95,6 @@ public class RSA {
 				e.printStackTrace();
 			}
 		}
-		
-		return fichero;
 	}
 	
 	
