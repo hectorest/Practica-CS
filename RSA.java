@@ -40,7 +40,7 @@ public class RSA {
 	/**
 	 * Emplearemos una funcion que convierte un array de bytes en una cadena
 	 * dicha funcion la utilizaremos para desplegar el contenido del
-	 * criptosistema en consola
+	 * criptosistema
 	 * 
 	 * @param  array de bytes a convertir en String
 	 * @return  El String
@@ -68,47 +68,48 @@ public class RSA {
 	 * @return Un void
 	 */
 	
-	public void guardaClave(PrivateKey clave) {
+	public String guardaClave(String fichero) {
 		FileWriter salida = null;
+		String ficheroClave = null;
+		
 		try {
 			
-			// creamos el nombre del fichero
-			String nombre = "clave.txt";
-			
-			// generamos el fichero donde guardamos la clave privada
-			salida = new FileWriter(nombre);
-			
-			// configuramos la clave para guardarla
-			byte[] conf = clave.getEncoded();
-			String clav = asHex(conf);
+			// abrimos el fichero donde guardamos la clave privada
+			salida = new FileWriter(fichero);
+			String clave = this.getPrivateKey();
 			
 			// lo guardamos
-			salida.write(clav);
+			salida.write(clave);
 			
 		} catch(NullPointerException | IOException e) {
 			System.err.println("Excepcion: " + e.getMessage());
 			e.printStackTrace();
 		} finally {
 			try {
-				if(salida != null) salida.close();
+				if(salida != null) {
+					salida.close();
+					ficheroClave = fichero;
+				}
 			} catch(IOException e) {
 				System.err.println("Excepcion: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
+		
+		return ficheroClave;
 	}
 	
 	
 
 	/**
-	 * Encriptamos el archivo pasado por parametro
+	 * Encriptamos la clave AES pasada por parametro
 	 * 
 	 * @param archivo
 	 * @throws Exception
 	 * @return criptosistema en array bytes
 	 */
 	
-	public String encriptarArchivo(String s) throws Exception {
+	public String encriptarClave(String s) throws Exception {
 		byte[] devuelve = null;
 		
 		// modificamos el sistema para que encripte con la clave publica
@@ -121,23 +122,46 @@ public class RSA {
 	
 	
 	/**
-	 * Decriptamos el archivo pasado por parametro
+	 * Decriptamos la clave AES pasada por parametro
 	 * 
 	 * @param archivo
 	 * @throws Exception
 	 * @return mensaje en claro en String
 	 */
 	
-	public String decriptarArchivo(byte[] c) throws Exception {
+	public String decriptarClave(String s) throws Exception {
 		byte[] decriptado = null;
 		
 		// modificamos el sistema para que desencripte con la clave privada
 		cipher.init(Cipher.DECRYPT_MODE, privada);
-		decriptado = cipher.doFinal(c);
+		decriptado = cipher.doFinal(s.getBytes());
 		
 		return (new String(decriptado));
 	}
 	
 	
+	
+	/**
+	 * Getter de la clave publica
+	 * 
+	 * @return PublicKey
+	 */
+	
+	public String getPublicKey() {
+		byte[] llave = publica.getEncoded();
+		return (asHex(llave));
+	}
 
+	
+	
+	/**
+	 * Getter de la clave privada
+	 * 
+	 * @return PrivateKey
+	 */
+	
+	public String getPrivateKey() {
+		byte[] llave = privada.getEncoded();
+		return (asHex(llave));
+	}
 }
