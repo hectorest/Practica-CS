@@ -79,7 +79,7 @@ public class AES {
 	 * @return mensaje en claro en String
 	 */
 	
-	public String decriptarArchivo(byte[] c) throws Exception {
+	public String desencriptarArchivo(byte[] c) throws Exception {
 		byte[] desencriptado = null;
 		
 		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
