@@ -14,11 +14,11 @@ public class SHA3_Ejemplos {
 		    MessageDigest md = MessageDigest.getInstance("SHA-512");
 		    //Resetea el mensaje (no se por que)
 		    md.reset();
-		    //Especifica el array de bytes que se usará, UTF8 en este caso
-		    md.update(input.getBytes("utf8"));
-		    
+		    //Especifica el array de bytes que se usara, input (pasado a bytes UTF-8) en este caso
+		    md.update(input.getBytes(StandardCharsets.UTF_8));
+		    //digest() resume la palabra, que resulta en un gran entero (hexadecimal), que a su vez se pasa a String
 		    toReturn = String.format("%040x", new BigInteger(1, md.digest()));
-		} catch (Exception e) {
+		} catch (NoSuchAlgorithmException e) {
 		    e.printStackTrace();
 		}
 		
