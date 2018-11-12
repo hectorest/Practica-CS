@@ -79,13 +79,13 @@ public class AES {
 	 * @return mensaje en claro en String
 	 */
 	
-	public String desencriptarArchivo(byte[] c) throws Exception {
+	public String desencriptarArchivo(String s) throws Exception {
 		byte[] desencriptado = null;
 		
 		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
 		cipher.init(Cipher.DECRYPT_MODE, sKeySpec);
 		// Obtenemos el array de bytes de lo decriptado
-		desencriptado = cipher.doFinal(c);
+		desencriptado = cipher.doFinal(s.getBytes());
 		
 		return (new String(desencriptado));
 	}
