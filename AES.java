@@ -1,4 +1,5 @@
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.*;
 
 
@@ -8,6 +9,7 @@ public class AES {
 	
 	private SecretKeySpec sKeySpec;
 	private Cipher cipher;
+	private IvParameterSpec iv;
 	
 	// METODO CONSTRUCTOR
 	
@@ -25,6 +27,9 @@ public class AES {
 		byte[] crudo = llave.getEncoded();
 		// Construimos una clave secreta especificando que es de tipo AES
 		sKeySpec = new SecretKeySpec(crudo, "AES");
+		//Especificamos el parametro iv que se usará
+		String sIv = "AES/CBC/PKCS5Padding";
+		iv = new IvParameterSpec(sIv.getBytes());
 	}
 	
 	
@@ -70,7 +75,6 @@ public class AES {
 	}
 	
 	
-	
 	/**
 	 * Desencriptamos el archivo pasado por parametro
 	 * 
@@ -80,16 +84,14 @@ public class AES {
 	 */
 	
 	public String desencriptarArchivo(String s) throws Exception {
-		byte[] desencriptado = null;
 		
 		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
 		cipher.init(Cipher.DECRYPT_MODE, sKeySpec);
 		// Obtenemos el array de bytes de lo decriptado
-		desencriptado = cipher.doFinal(s.getBytes());
+		byte[] desencriptado = cipher.doFinal(s.getBytes());
 		
 		return (new String(desencriptado));
 	}
-	
 	
 	
 	/**
