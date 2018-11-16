@@ -5,12 +5,14 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class SHA3_Ejemplos {
+	
+	private String length;
 
 	public static String getSHA512(String input){ //Este mola mas
 
 		String toReturn = null;
 		try {
-			//Se guarda en md un MessageDigest de tipo sHA-512
+			//Se guarda en md un MessageDigest de tipo SHA-512
 		    MessageDigest md = MessageDigest.getInstance("SHA-512");
 		    //Resetea el mensaje (no se por que)
 		    md.reset();
@@ -18,11 +20,17 @@ public class SHA3_Ejemplos {
 		    md.update(input.getBytes(StandardCharsets.UTF_8));
 		    //digest() resume la palabra, que resulta en un gran entero (hexadecimal), que a su vez se pasa a String
 		    toReturn = String.format("%040x", new BigInteger(1, md.digest()));
-		} catch (NoSuchAlgorithmException e) {
+		    getLength(md.digest());
+		}
+		catch (NoSuchAlgorithmException e) {
 		    e.printStackTrace();
 		}
-		
 		return toReturn;
+	}
+	
+	public String getLength(MessageDigest md) {
+
+		System.out.println("El tamano en bytes del string hasheado es: " + md.getDigestLength());
 	}
 	
 	public String get_SHA_512_SecurePassword(String passwordToHash, String   salt){ //El de arriba mola mas
