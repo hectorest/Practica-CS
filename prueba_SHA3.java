@@ -1,6 +1,6 @@
 import javax.crypto.*;
 import javax.crypto.spec.*;
-import AES.java;
+import SHA3_Ejemplos.java;
 
 public class prueba_SHA3 {
 	

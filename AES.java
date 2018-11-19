@@ -27,7 +27,7 @@ public class AES {
 		byte[] crudo = llave.getEncoded();
 		// Construimos una clave secreta especificando que es de tipo AES
 		sKeySpec = new SecretKeySpec(crudo, "AES");
-		//Especificamos el parametro iv que se usará
+		//Especificamos el parametro iv que se usara
 		String sIv = "AES/CBC/PKCS5Padding";
 		iv = new IvParameterSpec(sIv.getBytes());
 		cipher.getInstance("AES/CBC/PKCS5Padding");
