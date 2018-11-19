@@ -30,6 +30,7 @@ public class AES {
 		//Especificamos el parametro iv que se usará
 		String sIv = "AES/CBC/PKCS5Padding";
 		iv = new IvParameterSpec(sIv.getBytes());
+		cipher.getInstance("AES/CBC/PKCS5Padding");
 	}
 	
 	

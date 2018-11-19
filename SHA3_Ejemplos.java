@@ -20,7 +20,7 @@ public class SHA3_Ejemplos {
 		    md.update(input.getBytes(StandardCharsets.UTF_8));
 		    //digest() resume la palabra, que resulta en un gran entero (hexadecimal), que a su vez se pasa a String
 		    toReturn = String.format("%040x", new BigInteger(1, md.digest()));
-		    getLength(md.digest());
+		    //getLength(md.digest());
 		}
 		catch (NoSuchAlgorithmException e) {
 		    e.printStackTrace();
