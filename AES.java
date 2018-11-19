@@ -1,7 +1,7 @@
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.*;
-
+import java.util.Base64;
 
 public class AES {
 
@@ -27,10 +27,9 @@ public class AES {
 		byte[] crudo = llave.getEncoded();
 		// Construimos una clave secreta especificando que es de tipo AES
 		sKeySpec = new SecretKeySpec(crudo, "AES");
-		//Especificamos el parametro iv que se usara
+		//Especificamos el parametro iv que se usará
 		String sIv = "AES/CBC/PKCS5Padding";
 		iv = new IvParameterSpec(sIv.getBytes());
-		cipher.getInstance("AES/CBC/PKCS5Padding");
 	}
 	
 	
@@ -42,7 +41,7 @@ public class AES {
 	 * 
 	 * @param  array de bytes a convertir en String
 	 * @return  El String
-	 */
+	 
 	
 	public String asHex(byte buf[]) {
 		StringBuffer strbuf = new StringBuffer(buf.length * 2);
@@ -55,7 +54,7 @@ public class AES {
 		return strbuf.toString();
 	}
 
-	
+	*/
 	
 	/**
 	 * Encriptamos el archivo pasado por parametro
@@ -72,7 +71,7 @@ public class AES {
 		// Encriptamos el mensaje
 		byte[] encriptado = cipher.doFinal(s.getBytes());
 		
-		return asHex(encriptado);
+		return new String(Base64.getEncoder().encode(encriptado));
 	}
 	
 	
@@ -89,7 +88,7 @@ public class AES {
 		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
 		cipher.init(Cipher.DECRYPT_MODE, sKeySpec);
 		// Obtenemos el array de bytes de lo decriptado
-		byte[] desencriptado = cipher.doFinal(s.getBytes());
+		byte[] desencriptado = cipher.doFinal(Base64.getDecoder().decode(s));
 		
 		return (new String(desencriptado));
 	}
@@ -104,7 +103,7 @@ public class AES {
 	
 	public String getClavePrivada() {
 		byte[] llave = sKeySpec.getEncoded();
-		return (asHex(llave));
+		return Base64.getEncoder().encodeToString(llave);
 	}
 
 }

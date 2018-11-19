@@ -8,6 +8,7 @@
 import java.io.*;
 import java.security.*;
 import javax.crypto.Cipher;
+import java.util.Base64;
 
 public class RSA {
 	
@@ -44,7 +45,7 @@ public class RSA {
 	 * 
 	 * @param  array de bytes a convertir en String
 	 * @return  El String
-	 */
+	 
 	
 	public String asHex(byte buf[]) {
 		StringBuffer strbuf = new StringBuffer(buf.length * 2);
@@ -56,7 +57,7 @@ public class RSA {
 		}
 		return strbuf.toString();
 	}
-	
+	*/
 	
 	
 	/**
@@ -78,11 +79,11 @@ public class RSA {
 			
 			// abrimos el fichero donde guardamos la clave privada
 			salida = new FileWriter(archivo);
-			String clave = this.getPrivateKey();
+			String clavePriv = this.getPrivateKey();
 			
 			// lo guardamos
 			
-			salida.write(clave);
+			salida.write(clavePriv);
 			
 		} catch(NullPointerException | IOException e) {
 			System.err.println("Excepcion: " + e.getMessage());
@@ -114,7 +115,7 @@ public class RSA {
 		cipher.init(Cipher.ENCRYPT_MODE, publica);
 		devuelve = cipher.doFinal(s.getBytes());
 		
-		return asHex(devuelve);
+		return Base64.getEncoder().encodeToString(devuelve);
 	}
 	
 	
@@ -147,7 +148,7 @@ public class RSA {
 	
 	public String getPublicKey() {
 		byte[] llave = publica.getEncoded();
-		return (asHex(llave));
+		return Base64.getEncoder().encodeToString(llave);
 	}
 
 	
@@ -160,6 +161,6 @@ public class RSA {
 	
 	public String getPrivateKey() {
 		byte[] llave = privada.getEncoded();
-		return (asHex(llave));
+		return Base64.getEncoder().encodeToString(llave);
 	}
 }
