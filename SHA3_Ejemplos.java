@@ -1,3 +1,5 @@
+package pruebas;
+
 import java.math.BigInteger;//Para usar enteros grandes
 import java.security.MessageDigest;//Necesario para usar SHA-512
 import java.nio.charset.StandardCharsets;
@@ -8,7 +10,7 @@ public class SHA3_Ejemplos {
 	
 	private String length;
 
-	public static String getSHA512(String input){ //Este mola mas
+	public String getSHA512(String input){ //Este mola mas
 
 		String toReturn = null;
 		try {
@@ -21,7 +23,7 @@ public class SHA3_Ejemplos {
 		    //digest() resume la palabra, que resulta en un gran entero (hexadecimal), que a su vez se pasa a String
 		    toReturn = String.format("%040x", new BigInteger(1, md.digest()));
 		    //cogemos las primeras 16 palabras que equivaldrian a los 128 bits
-		    toReturn = substring(0,15);
+		    toReturn = toReturn.substring(0,16);
 		    
 		}
 		catch (NoSuchAlgorithmException e) {
@@ -30,8 +32,8 @@ public class SHA3_Ejemplos {
 		return toReturn;
 	}
 	
-	public String getLength(MessageDigest md) {
+	/*public String getLength(MessageDigest md) {
 
 		System.out.println("El tamano en bytes del string hasheado es: " + md.getDigestLength());
-	}
+	}*/
 }
