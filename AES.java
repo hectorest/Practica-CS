@@ -5,6 +5,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.*;
 import java.util.Base64;
 import java.io.*;
+import com.google.common.io.Files;
 
 public class aes {
 
@@ -91,14 +92,18 @@ public class aes {
 	 * @return mensaje en claro en String
 	 */
 	
-	public String desencriptarArchivo(String s) throws Exception {
+	public File desencriptarArchivo(String s) throws Exception {
 		
 		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
 		cipher.init(Cipher.DECRYPT_MODE, sKeySpec);
 		// Obtenemos el array de bytes de lo decriptado
 		byte[] desencriptado = cipher.doFinal(Base64.getDecoder().decode(s));
 		
-		return (new String(desencriptado));
+		File f;
+		//Pasamos de bytes a File con ayuda de la libreria Google Guava
+		Files.write(desencriptado, f);
+		
+		return f;
 	}
 	
 	
