@@ -1,9 +1,12 @@
+package pruebas;
+
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.*;
 import java.util.Base64;
+import java.io.*;
 
-public class AES {
+public class aes {
 
 	// VARIABLES DE INSTANCIA
 	
@@ -13,7 +16,7 @@ public class AES {
 	
 	// METODO CONSTRUCTOR
 	
-	public AES() throws Exception {
+	public aes() throws Exception {
 		
 		// Instanciamos un Generador de llaves en tipo AES
 		KeyGenerator kgen = KeyGenerator.getInstance("AES");
@@ -64,12 +67,17 @@ public class AES {
 	 * @return mensaje encriptado en String
 	 */
 	
-	public String encriptarArchivo (String s) throws Exception {
+	public String encriptarArchivo (File f) throws Exception {
 		
 		// Inicializamos el sistema de ahora en modo de ENCRIPTACION con la clave del constructor
 		cipher.init(Cipher.ENCRYPT_MODE, sKeySpec);
 		// Encriptamos el mensaje
-		byte[] encriptado = cipher.doFinal(s.getBytes());
+		  byte[] bytesArray = new byte[(int) f.length()]; 
+
+		  FileInputStream fis = new FileInputStream(f);
+		  fis.read(bytesArray); //read file into bytes[]
+		  fis.close();
+		byte[] encriptado = cipher.doFinal(bytesArray);
 		
 		return new String(Base64.getEncoder().encode(encriptado));
 	}
