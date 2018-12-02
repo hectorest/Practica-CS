@@ -1,20 +1,18 @@
-package pruebas;
+import javax.crypto.*;
+import javax.crypto.spec.*;
+import AES.java;
 
-public class ejemplo_uso_aes {
-
+public class ejemploUso {
+	
 	public static void main(String[] args) throws Exception {
 		
-		if(args!=null && args.length==1) {
+		if(args[]!=null && args.length==1) {
 			System.out.println("El string original es: " + args[0]);
-			
-			aes aes1 = new AES();
-			
-			String encriptado = aes1.encriptarArchivo(args[0]);
+			String encriptado = AES.encriptarArchivo(args[0]);
 			System.out.println("El string encriptado es: " + encriptado);
-			byte[] encriptadoBytes = encriptado.getBytes();
-			String desencriptado = aes1.desencriptarArchivo(encriptado);
+			String desencriptado = AES.desencriptarArchivo(encriptado);
 			System.out.println("El string desencriptado es: " + desencriptado);
 		}
 	}
-	
+
 }
