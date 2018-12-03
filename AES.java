@@ -68,7 +68,11 @@ public class aes {
 	 * @return mensaje encriptado en String
 	 */
 	
-	public String encriptarArchivo (File f) throws Exception {
+	public String[] encriptarArchivo (File f) throws Exception {
+		
+		String[] devolver = new String[2];
+			
+		devolver[1] = f.getName();
 		
 		// Inicializamos el sistema de ahora en modo de ENCRIPTACION con la clave del constructor
 		cipher.init(Cipher.ENCRYPT_MODE, sKeySpec);
@@ -80,7 +84,9 @@ public class aes {
 		  fis.close();
 		byte[] encriptado = cipher.doFinal(bytesArray);
 		
-		return new String(Base64.getEncoder().encode(encriptado));
+		devolver[0] = new String(Base64.getEncoder().encode(encriptado));
+		
+		return devolver;
 	}
 	
 	
@@ -92,18 +98,17 @@ public class aes {
 	 * @return mensaje en claro en String
 	 */
 	
-	public File desencriptarArchivo(String s) throws Exception {
+	public void desencriptarArchivo(String s, String nombre) throws Exception {
 		
 		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
 		cipher.init(Cipher.DECRYPT_MODE, sKeySpec);
 		// Obtenemos el array de bytes de lo decriptado
 		byte[] desencriptado = cipher.doFinal(Base64.getDecoder().decode(s));
 		
-		File f;
+		//File f = new File("C:\\Users\\Usuario\\Documents\\Materials Universitat\\Tercer Curs\\CS\\Prácticas\\Workspace-Eclipse\\pruebas\\src\\pruebas");
 		//Pasamos de bytes a File con ayuda de la libreria Google Guava
-		Files.write(desencriptado, f);
-		
-		return f;
+		Files.write(desencriptado, new File("C:\\Users\\Usuario\\Documents\\Materials Universitat\\Tercer Curs\\CS\\Prácticas\\" + nombre));
+		//return f;
 	}
 	
 	

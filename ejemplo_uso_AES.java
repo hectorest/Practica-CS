@@ -15,11 +15,10 @@ public class ejemplo_uso_aes {
 			
 			
 			
-			String encriptado = aes1.encriptarArchivo(fichero);
-			System.out.println("El string encriptado es: " + encriptado);
-			byte[] encriptadoBytes = encriptado.getBytes();
-			String desencriptado = aes1.desencriptarArchivo(encriptado);
-			System.out.println("El string desencriptado es: " + desencriptado);
+			String[] encriptado = aes1.encriptarArchivo(fichero);
+			System.out.println("El string encriptado es: " + encriptado[0]);
+			aes1.desencriptarArchivo(encriptado[0], encriptado[1]);
+			System.out.println("El string desencriptado es: ");
 		}
 	}
 	
