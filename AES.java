@@ -118,6 +118,44 @@ public class AES {
 		//return f;
 	}
 	
+	/**
+	 * Encriptamos la clave privada de RSA pasada por parametro
+	 * 
+	 * @param Clave privada RSA
+	 * @throws Exception
+	 * @return Clave cifrada
+	 */
+	
+	public String encriptarClavePrivRSA (String s) throws Exception {
+		
+		// Inicializamos el sistema de ahora en modo de ENCRIPTACION con la clave del constructor
+		cipher.init(Cipher.ENCRYPT_MODE, sKeySpec);
+		// Encriptamos el mensaje
+		byte[] encriptado = cipher.doFinal(s.getBytes());
+		
+		return new String(Base64.getEncoder().encode(encriptado));
+	}
+	
+	
+	/**
+	 * Desencriptamos la clave privada de RSA pasada por parametro
+	 * 
+	 * @param Clave cifrada
+	 * @throws Exception
+	 * @return Clave original RSA
+	 */
+	
+	public String desencriptarClavePrivRSA(String s) throws Exception {
+		
+		// Inicializamos el sistema de ahora en modo de DESENCRIPTACION con la clave del constructor
+		cipher.init(Cipher.DECRYPT_MODE, sKeySpec);
+		// Obtenemos el array de bytes de lo decriptado
+		byte[] desencriptado = cipher.doFinal(Base64.getDecoder().decode(s));
+		
+		return (new String(desencriptado));
+	}
+
+	
 	
 	/**
 	 * Getter de la clave privada
