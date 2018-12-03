@@ -1,13 +1,11 @@
-package pruebas;
 
 import javax.crypto.*;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.*;
 import java.util.Base64;
 import java.io.*;
 import com.google.common.io.Files;
 
-public class aes {
+public class AES {
 
 	// VARIABLES DE INSTANCIA
 	
@@ -17,7 +15,7 @@ public class aes {
 	
 	// METODO CONSTRUCTOR
 	
-	public aes() throws Exception {
+	public AES() throws Exception {
 		
 		// Instanciamos un Generador de llaves en tipo AES
 		KeyGenerator kgen = KeyGenerator.getInstance("AES");
@@ -34,6 +32,15 @@ public class aes {
 		//Especificamos el parametro iv que se usará
 		String sIv = "AES/CBC/PKCS5Padding";
 		iv = new IvParameterSpec(sIv.getBytes());
+	}
+	
+	//METODO CONSTRUCTOR AL QUE LE PASAS UNA CLAVE SECRETA
+	public AES(String cl) throws Exception{
+		// Generamos un objeto de cifrado de tipo AES
+		cipher = Cipher.getInstance("AES");
+		byte[] crudo = cl.getBytes();
+		// Construimos una clave secreta especificando que es de tipo AES
+		sKeySpec = new SecretKeySpec(crudo, "AES");
 	}
 	
 	

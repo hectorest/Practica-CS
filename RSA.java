@@ -67,9 +67,10 @@ public class RSA {
 	 * 
 	 * @param Clave privada a guardar
 	 * @return Un void
+	 * @throws Exception 
 	 */
 	
-	public void guardaClave() {
+	public void guardaClave() throws Exception {
 		//ruta donde vamos a crear el .txt !!Cambiar por vuestra ruta del proyecto!! 
 		String ruta = "C:/Users/neora/workspace/Encriptador/clave.txt";
         File archivo = new File(ruta);
@@ -80,9 +81,12 @@ public class RSA {
 			// abrimos el fichero donde guardamos la clave privada
 			salida = new FileWriter(archivo);
 			String clavePriv = this.getPrivateKey();
-			
-			// lo guardamos
-			
+			//Generamos una instancia de AES y encriptamos la clave privada con la pass
+			/*
+			String hasheado = SHA3_Ejemplos.getSHA512(password);
+			AES aes = new AES(password);
+			aes.encriptarArchivo(clavePriv);
+			*/
 			salida.write(clavePriv);
 			
 		} catch(NullPointerException | IOException e) {
@@ -112,7 +116,7 @@ public class RSA {
 		byte[] devuelve = null;
 		
 		// modificamos el sistema para que encripte con la clave publica
-		cipher.init(Cipher.ENCRYPT_MODE, publica);
+		cipher.init(Cipher.PUBLIC_KEY, publica);
 		devuelve = cipher.doFinal(s.getBytes());
 		
 		return Base64.getEncoder().encodeToString(devuelve);
@@ -132,8 +136,8 @@ public class RSA {
 		byte[] decriptado = null;
 		
 		// modificamos el sistema para que desencripte con la clave privada
-		cipher.init(Cipher.DECRYPT_MODE, privada);
-		decriptado = cipher.doFinal(s.getBytes());
+		cipher.init(Cipher.PRIVATE_KEY, privada);
+		decriptado = cipher.doFinal(Base64.getDecoder().decode(s));
 		
 		return (new String(decriptado));
 	}
