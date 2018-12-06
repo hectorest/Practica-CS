@@ -106,7 +106,36 @@ public class CopiaRemota {
 				
 				
 			} else if(args[1].equals("D")) {
-				
+				//Abrimos el archivo que contiene el fichero codificado
+				archivoClaveRSAprivada = new File(rutaDestino+(String)(args[0]));
+				FileReader fr = new FileReader(archivoClaveRSAprivada);
+				BufferedReader br = new BufferedReader(fr);
+				String archRSApriv = null;
+				String linea = null;
+				while((linea = br.readLine()) != null)
+				{
+					if(archRSApriv == null)
+					{
+						archRSApriv = linea;
+					}
+					else
+					{
+						archRSApriv = archRSApriv + linea;
+					}
+				}
+				//Leemos el password para descifrar
+				System.out.print("Introduce la password: ");
+				Scanner entradaEscaner = new Scanner(System.in);
+				password = entradaEscaner.nextLine();
+				entradaEscaner.close();
+				//Aplicamos la funcion hash a la contrasenya
+				password = SHA3_Ejemplos.getSHA512(password);
+				aes2 = new AES(password);
+				//Desencriptamos el archivo que contiene RSA priv con el password
+				//Habria que crear una excepcion o guardar la contrasenya en la aplicacion para comparar
+				aes2.desencriptarArchivo(password, archRSApriv);
+				br.close();
+				fr.close();
 			}
 			
 		} catch(Exception e) {
