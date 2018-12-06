@@ -1,3 +1,4 @@
+package seguridad;
 
 import java.io.*;
 import java.util.*;
@@ -15,24 +16,66 @@ public class CopiaRemota {
 	
 	
 	// metodo que crea un archivo de texto y escribe en el, especificando su nombre o su ruta
-	public static File crearCopiaSeguridadRemota(String r, String c) throws Exception {
+	public static File crearCopiaSeguridadRemota(String r, String c) {
 		
-		// especificamos su ruta
-		File f = new File(r);
+		FileWriter fw = null;
+		BufferedWriter br = null;
+		File f = null;
 		
-		// si no existia creamos el archivo
-		if(!f.exists()) {
-			f.createNewFile();
+		try {
+			
+			// especificamos su ruta
+			f = new File(r);
+			
+			// si no existia creamos el archivo
+			if(!f.exists()) {
+				f.createNewFile();
+			}
+			
+			// copiamos la cabecera cifrada AES junto con el archivo cifrado
+			fw = new FileWriter(f);
+			br = new BufferedWriter(fw);
+			br.write(c);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				br.close();
+				fw.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
-		
-		// copiamos la cabecera cifrada AES junto con el archivo cifrado
-		FileWriter fw = new FileWriter(f);
-		BufferedWriter br = new BufferedWriter(fw);
-		br.write(c);
-		br.close();
-		fw.close();
-		
 		return f;
+	}
+	
+	
+	
+	public static String leerCopiaSeguridadRemota(File f) {
+		
+		FileReader fw = null;
+		BufferedReader br = null;
+		String devuelve = null;
+		
+		try {
+			
+			fw = new FileReader(f);
+			br = new BufferedReader(fw);
+			devuelve = br.readLine();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				br.close();
+				fw.close();
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return devuelve;
 	}
 	
 
@@ -41,13 +84,16 @@ public class CopiaRemota {
 	public static void main(String[] args) {
 		AES aes1, aes2;
 		RSA rsa1;
-		File archivo = null, archivoClaveRSAprivada = null;
-		//!!!!Meted vuestra ruta!!!
-		String rutaDestino = "C:\\Users\\neora\\Google Drive\\";
 		String password;
+		File archivo = null, archivoClaveRSAprivada = null;
+		SHA3 hash = new SHA3();
+		String rutaDrive = "C:\\Users\\Alex\\Google Drive\\iSecurityCS\\";
+		String rutaUploads = "C:\\Users\\Alex\\Desktop\\workspace\\iSecurity\\Uploads\\";
+		String rutaDownloads = "C:\\Users\\Alex\\Desktop\\workspace\\iSecurity\\Downloads\\";
+		
 		
 		if(args.length != 2) {
-			System.out.println("Introduce todos los parametros.");
+			System.out.println("ERROR: Introduce todos los parametros...");
 			System.exit(-1);
 		}
 		
@@ -58,9 +104,7 @@ public class CopiaRemota {
 			
 			
 			// comprobamos la operacion a realizar: subir o descargar de la nube
-			//que danyo ha hecho C++
 			if(args[1].equals("E")) {
-				
 				
 				
 				// inicializamos las variables AES y RSA principales
@@ -68,7 +112,7 @@ public class CopiaRemota {
 				rsa1 = new RSA();
 				
 				// obtenemos el archivo a cifrar
-				archivo = new File(args[0]);
+				archivo = new File(rutaUploads + args[0]);
 				
 				// lo ciframos con AES obteniendo su nombre y el string del cifrado
 				String[] archivoCifrado = aes1.encriptarArchivo(archivo);
@@ -76,66 +120,65 @@ public class CopiaRemota {
 				// ciframos la clave AES usada con el metodo RSA
 				String claveAEScifrada = rsa1.encriptarClaveAES(aes1.getClavePrivada());
 				
-				//Cambiamos la extension del archivoCifrado a txt
-				String aTxt1[] = archivoCifrado[1].split("\\.");
-				String nombreArchivo1 = aTxt1[0] + ".txt";
 				// creamos el .txt remoto que conformara la copia de seguridad con el nombre correspondiente
 				String cabecera = claveAEScifrada + "####" + archivoCifrado[0];
-				CopiaRemota.crearCopiaSeguridadRemota(rutaDestino + nombreArchivo1, cabecera);
+				CopiaRemota.crearCopiaSeguridadRemota(rutaDrive + archivoCifrado[1] + ".txt", cabecera);
 				
 				// creamos otro .txt local que contendra la clave privada rsa
-				archivoClaveRSAprivada = CopiaRemota.crearCopiaSeguridadRemota("key" + nombreArchivo1, rsa1.getPrivateKey());
+				archivoClaveRSAprivada = CopiaRemota.crearCopiaSeguridadRemota("key" + archivoCifrado[1] + ".txt", rsa1.getPrivateKey());
 				
 				// y lo ciframos con una nueva clave AES pero introducida con el usuario
 				System.out.print("Introduce la password: ");
 				Scanner entradaEscaner = new Scanner(System.in);
 				password = entradaEscaner.nextLine();
 				entradaEscaner.close();
-				//Aplicamos la funcion hash a la contrasenya
-				password = SHA3_Ejemplos.getSHA512(password);
+				
 				// ciframos con AES, esta password tendra que ser recordada por el usuario
-				aes2 = new AES(password);
+				aes2 = new AES(hash.getSHA512(password));
 				String[] archivoCifrado2 = aes2.encriptarArchivo(archivoClaveRSAprivada);
 				
-				//Cambiamos la extension del archivoCifrado a txt
-				String aTxt2[] = archivoCifrado[1].split("\\.");
-				String nombreArchivo2 = aTxt2[0] + ".txt";
-				// lo guardamos por ultimo en la nube
-				CopiaRemota.crearCopiaSeguridadRemota(rutaDestino + "key" + nombreArchivo2, archivoCifrado2[0]);
+				// lo guardamos por ultimo en la nube con la password para posterior comprobacion
+				CopiaRemota.crearCopiaSeguridadRemota(rutaDrive + archivoCifrado2[1], archivoCifrado2[0]);
 				archivoClaveRSAprivada.delete();
+				
+				System.out.println("Copia remota generada correctamente!!!");
+				
 				
 				
 			} else if(args[1].equals("D")) {
-				//Abrimos el archivo que contiene el fichero codificado
-				archivoClaveRSAprivada = new File(rutaDestino+(String)(args[0]));
-				FileReader fr = new FileReader(archivoClaveRSAprivada);
-				BufferedReader br = new BufferedReader(fr);
-				String archRSApriv = null;
-				String linea = null;
-				while((linea = br.readLine()) != null)
-				{
-					if(archRSApriv == null)
-					{
-						archRSApriv = linea;
-					}
-					else
-					{
-						archRSApriv = archRSApriv + linea;
-					}
-				}
-				//Leemos el password para descifrar
+				File archivo1 = null, archivo2 = null;
+				String nombre = args[0];
+				
+				
+				// le pedimos la password al usuario correspondiente para este archivo
 				System.out.print("Introduce la password: ");
 				Scanner entradaEscaner = new Scanner(System.in);
 				password = entradaEscaner.nextLine();
 				entradaEscaner.close();
-				//Aplicamos la funcion hash a la contrasenya
-				password = SHA3_Ejemplos.getSHA512(password);
-				aes2 = new AES(password);
-				//Desencriptamos el archivo que contiene RSA priv con el password
-				//Habria que crear una excepcion o guardar la contrasenya en la aplicacion para comparar
-				aes2.desencriptarArchivo(password, archRSApriv);
-				br.close();
-				fr.close();
+				
+				// obtenemos los archivos que estan en la nube
+				archivo1 = new File(rutaDrive + args[0]);
+				archivo2 = new File(rutaDrive + "key" + args[0]);
+				
+				// obtenemos sus contenidos
+				String contenido1 = CopiaRemota.leerCopiaSeguridadRemota(archivo1);
+				String contenido3 = CopiaRemota.leerCopiaSeguridadRemota(archivo2);
+				
+				// usamos la password introducida para obtener todas las claves y criptosistemas
+				aes2 = new AES(hash.getSHA512(password));
+				
+				// obtenemos el archivo que contiene la clave RSA privada
+				aes2.desencriptarArchivo(contenido3, "key" + nombre);
+				archivoClaveRSAprivada = new File(rutaDownloads + "key" + nombre);
+				
+				// obtenemos la clave rsa privada
+				String contenido2 = CopiaRemota.leerCopiaSeguridadRemota(archivoClaveRSAprivada);
+				rsa1 = new RSA();
+				rsa.setPrivateKey(contenido2);
+				
+				String[] encriptado = contenido1.split("####");
+				
+				
 			}
 			
 		} catch(Exception e) {
