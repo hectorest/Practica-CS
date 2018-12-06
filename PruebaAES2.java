@@ -43,7 +43,7 @@ public class PruebaAES2 {
 				String sha = rellena.getSHA512(clave);
 				AES aes1 = new AES(sha);
 				System.out.println("Clave AES hasheada: " + sha);
-				aes1.desencriptarArchivo(cifrado[0], cifrado[1]);
+				aes1.desencriptarArchivo(cifrado[1], cifrado[0]);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
