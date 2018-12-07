@@ -43,6 +43,13 @@ public class AES {
 		sKeySpec = new SecretKeySpec(crudo, "AES");
 	}
 	
+	//Metodo que permite cambiar la clave privada de AES por la insertada por parametro
+	public void setClave(String s)
+	{
+		byte[] b = Base64.getDecoder().decode(s);
+		sKeySpec = new SecretKeySpec(b,"AES");
+	}
+	
 	
 	
 	/**
@@ -114,7 +121,7 @@ public class AES {
 		
 		//File f = new File("C:\\Users\\Usuario\\Documents\\Materials Universitat\\Tercer Curs\\CS\\Prácticas\\Workspace-Eclipse\\pruebas\\src\\pruebas");
 		//Pasamos de bytes a File con ayuda de la libreria Google Guava
-		Files.write(desencriptado, new File("C:\\Users\\Usuario\\Documents\\Materials Universitat\\Tercer Curs\\CS\\Prácticas\\" + nombre));
+		Files.write(desencriptado, new File("C:\\Users\\neora\\Desktop\\" + nombre));
 		//return f;
 	}
 	
