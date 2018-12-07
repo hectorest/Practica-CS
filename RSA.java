@@ -7,6 +7,8 @@
 
 import java.io.*;
 import java.security.*;
+import java.security.spec.PKCS8EncodedKeySpec;
+
 import javax.crypto.Cipher;
 import java.util.Base64;
 
@@ -34,6 +36,14 @@ public class RSA {
 		
 		// Generamos un objeto de cifrado de tipo RSA
 		cipher = Cipher.getInstance("RSA");
+	}
+	
+	public RSA(String priv) throws Exception
+	{
+		KeyFactory factory = KeyFactory.getInstance("RSA");
+		//Estandart de claves privadas
+		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(priv));
+		privada = factory.generatePrivate(keySpec);
 	}
 	
 	
@@ -68,7 +78,7 @@ public class RSA {
 	 * @param Clave privada a guardar
 	 * @return Un void
 	 * @throws Exception 
-	 */
+	 
 	
 	public void guardaClave() throws Exception {
 		//ruta donde vamos a crear el .txt !!Cambiar por vuestra ruta del proyecto!! 
@@ -85,8 +95,8 @@ public class RSA {
 			/*
 			String hasheado = SHA3_Ejemplos.getSHA512(password);
 			AES aes = new AES(password);
-			aes.encriptarArchivo(clavePriv);
-			*/
+			aes.encriptarClavePrivRSA(clavePriv);
+			
 			salida.write(clavePriv);
 			
 		} catch(NullPointerException | IOException e) {
@@ -102,7 +112,7 @@ public class RSA {
 		}
 	}
 	
-	
+	*/
 
 	/**
 	 * Encriptamos la clave AES pasada por parametro
@@ -112,11 +122,11 @@ public class RSA {
 	 * @return criptosistema en array bytes
 	 */
 	
-	public String encriptarClave(String s) throws Exception {
+	public String encriptarClaveAES(String s) throws Exception {
 		byte[] devuelve = null;
 		
 		// modificamos el sistema para que encripte con la clave publica
-		cipher.init(Cipher.PUBLIC_KEY, publica);
+		cipher.init(Cipher.ENCRYPT_MODE, publica);
 		devuelve = cipher.doFinal(s.getBytes());
 		
 		return Base64.getEncoder().encodeToString(devuelve);
@@ -132,15 +142,16 @@ public class RSA {
 	 * @return mensaje en claro en String
 	 */
 	
-	public String decriptarClave(String s) throws Exception {
+	public String decriptarClaveAES(String s) throws Exception {
 		byte[] decriptado = null;
 		
 		// modificamos el sistema para que desencripte con la clave privada
-		cipher.init(Cipher.PRIVATE_KEY, privada);
+		cipher.init(Cipher.DECRYPT_MODE, privada);
 		decriptado = cipher.doFinal(Base64.getDecoder().decode(s));
 		
 		return (new String(decriptado));
 	}
+	
 	
 	
 	
