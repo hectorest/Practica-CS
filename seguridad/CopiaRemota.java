@@ -94,7 +94,7 @@ public class CopiaRemota {
 		String rutaDownloads = "C:\\Users\\Alex\\Desktop\\workspace\\iSecurity\\Downloads\\";
 		
 		
-		if(args.length != 2) {
+		if(args.length != 3) {
 			System.out.println("ERROR: Introduce todos los parametros...");
 			System.exit(-1);
 		}
@@ -108,6 +108,9 @@ public class CopiaRemota {
 			// comprobamos la operacion a realizar: subir o descargar de la nube
 			if(args[1].equals("E")) {
 				
+				
+				// obtenemos la password introducida por el usuario
+				password = args[2];
 				
 				// inicializamos las variables AES y RSA principales
 				aes1 = new AES();
@@ -129,12 +132,6 @@ public class CopiaRemota {
 				// creamos otro .txt local que contendra la clave privada rsa
 				archivoClaveRSAprivada = CopiaRemota.crearCopiaSeguridadRemota("key" + archivoCifrado[1] + ".txt", rsa1.getPrivateKey());
 				
-				// y lo ciframos con una nueva clave AES pero introducida con el usuario
-				System.out.print("Introduce la password: ");
-				Scanner entradaEscaner = new Scanner(System.in);
-				password = entradaEscaner.nextLine();
-				entradaEscaner.close();
-				
 				// ciframos con AES, esta password tendra que ser recordada por el usuario
 				aes2 = new AES(hash.getSHA512(password));
 				String[] archivoCifrado2 = aes2.encriptarArchivo(archivoClaveRSAprivada);
@@ -153,11 +150,8 @@ public class CopiaRemota {
 				String nombre = args[0];
 				
 				
-				// le pedimos la password al usuario correspondiente para este archivo
-				System.out.print("Introduce la password: ");
-				Scanner entradaEscaner = new Scanner(System.in);
-				password = entradaEscaner.nextLine();
-				entradaEscaner.close();
+				// obtenemos la password introducida por el usuario
+				password = args[2];
 				
 				// obtenemos los archivos que estan en la nube
 				archivo1 = new File(rutaDrive + nombre);
